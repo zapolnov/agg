@@ -344,6 +344,7 @@ jobs:
         run: |
           rm -rf build/tool-configs
           git clone --depth=1 https://github.com/${{ github.repository_owner }}/tool-configs build/tool-configs
+          set IGAGIS_CMAKE_COMMON=`pwd`/build/tool-configs/cmake/common.cmake
           cd vcpkg/test
           cmake .
           make

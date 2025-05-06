@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 3.30)
 
 if(NOT IGAGIS_CMAKE_COMMON_INCLUDED)
-    include(../tool-configs/cmake/common.cmake)
+    if(IGAGIS_CMAKE_COMMON)
+        include("${IGAGIS_CMAKE_COMMON}")
+    else()
+        include(../tool-configs/cmake/common.cmake)
+    endif()
 endif()
 
 set(name agg)
