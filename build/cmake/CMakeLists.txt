@@ -9,7 +9,7 @@ project(${name})
 # find_package(utki CONFIG REQUIRED)
 
 # non-recursive
-set(srcdir "${CMAKE_CURRENT_SOURCE_DIR}/../src/${name}/src")
+set(srcdir "${CMAKE_CURRENT_SOURCE_DIR}/../../src/${name}/src")
 file(GLOB src RELATIVE "${srcdir}" CONFIGURE_DEPENDS "${srcdir}/*.cpp" "${srcdir}/*.hpp")
 
 set(srcs)
@@ -33,8 +33,8 @@ set_target_properties(${name} PROPERTIES CXX_EXTENSIONS OFF)
 target_include_directories(
     ${name}
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../src/${name}/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../src/${name}/include/${name}>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../src/${name}/include>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../src/${name}/include/${name}>
         $<INSTALL_INTERFACE:include>
 )
 
@@ -49,7 +49,7 @@ if(NOT AGG_DISABLE_INSTALL)
 # install library header files preserving directory hierarchy
 install(
     DIRECTORY
-        "${CMAKE_CURRENT_SOURCE_DIR}/../src/${name}/include/${name}"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../src/${name}/include/${name}"
     DESTINATION
         "${CMAKE_INSTALL_INCLUDEDIR}"
     FILES_MATCHING PATTERN
