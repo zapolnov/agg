@@ -1,78 +1,24 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.30)
 
-include(GNUInstallDirs)
+if(NOT IGAGIS_CMAKE_COMMON_INCLUDED)
+    include(../tool-configs/cmake/common.cmake)
+endif()
 
 set(name agg)
 
-project(${name})
-
-# find_package(utki CONFIG REQUIRED)
-
-# non-recursive
-set(srcdir "${CMAKE_CURRENT_SOURCE_DIR}/../../src/${name}/src")
-file(GLOB src RELATIVE "${srcdir}" CONFIGURE_DEPENDS "${srcdir}/*.cpp" "${srcdir}/*.hpp")
-
 set(srcs)
-foreach(file ${src})
-    get_filename_component(path "${file}" DIRECTORY)
-    string(REPLACE "/" "\\" path "Source Files/${path}")
-    source_group("${path}" FILES "${srcdir}/${file}")
-    list(APPEND srcs "${srcdir}/${file}")
-endforeach()
-
-add_library(
-    ${name}
-    STATIC
-    ${srcs}
+add_source_directory(srcs
+    "${CMAKE_CURRENT_SOURCE_DIR}/../../src/${name}/src"
+    PATTERNS "*.cpp" "*.hpp"
 )
 
-target_compile_features(${name} PUBLIC cxx_std_17)
-set_target_properties(${name} PROPERTIES CXX_STANDARD_REQUIRED ON)
-set_target_properties(${name} PROPERTIES CXX_EXTENSIONS OFF)
-
-target_include_directories(
-    ${name}
-    PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../src/${name}/include>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../src/${name}/include/${name}>
-        $<INSTALL_INTERFACE:include>
-)
-
-# target_link_libraries(
-#     ${name}
-#     PUBLIC
-#         utki::utki
-# )
-
-if(NOT AGG_DISABLE_INSTALL)
-
-# install library header files preserving directory hierarchy
-install(
-    DIRECTORY
+declare_library(${name}
+    SOURCES
+        ${srcs}
+    PRIVATE_INCLUDE_DIRECTORIES
         "${CMAKE_CURRENT_SOURCE_DIR}/../../src/${name}/include/${name}"
-    DESTINATION
-        "${CMAKE_INSTALL_INCLUDEDIR}"
-    FILES_MATCHING PATTERN
-        "*.h"
+    INSTALL_INCLUDE_DIRECTORIES
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../src/${name}/include/${name}"
+    PUBLIC_INCLUDE_DIRECTORIES
+        "${CMAKE_CURRENT_SOURCE_DIR}/../../src/${name}/include"
 )
-
-install(
-    TARGETS
-        ${name}
-    EXPORT # generate cmake configs
-        ${name}-config
-)
-
-# install cmake configs
-install(
-    EXPORT
-        ${name}-config
-    FILE
-        ${name}-config.cmake
-    DESTINATION
-        ${CMAKE_INSTALL_DATAROOTDIR}/${name}
-    NAMESPACE
-        ${name}::
-)
-
-endif()
